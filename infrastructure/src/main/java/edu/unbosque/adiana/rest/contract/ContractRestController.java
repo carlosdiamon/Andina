@@ -6,6 +6,7 @@ import edu.unbosque.adiana.contract.ContractService;
 import edu.unbosque.adiana.contract.request.ContractRequest;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.Collection;
@@ -21,6 +22,7 @@ public class ContractRestController {
 	}
 
 	@PostMapping
+	@PreAuthorize("hasRole('INVESTOR')")
 	public ResponseEntity<Contract> createContract(@RequestBody ContractRequest contractRequest) {
 		Contract createdContract = contractService.registerContract(contractRequest);
 		return ResponseEntity.status(HttpStatus.CREATED).body(createdContract);
@@ -58,6 +60,7 @@ public class ContractRestController {
 		return contractService.getContractsByInvestor(investorId);
 	}
 
+	@PreAuthorize("hasRole('OPERATOR')")
 	@PutMapping("/{contractId}/accept")
 	public ResponseEntity<Void> acceptContract(
 		@PathVariable int contractId,

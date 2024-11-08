@@ -1,5 +1,6 @@
 package edu.unbosque.adiana.database.role.entity;
 
+import edu.unbosque.adiana.client.ClientRole;
 import edu.unbosque.adiana.database.PersistenceEntity;
 import jakarta.persistence.*;
 
@@ -30,6 +31,10 @@ public class RoleEntity implements PersistenceEntity {
 
 	public void setName(String name) {
 		this.name = name;
+	}
+
+	public ClientRole getClientRole() {
+		return ClientRole.valueOf(name);
 	}
 
 	@Override

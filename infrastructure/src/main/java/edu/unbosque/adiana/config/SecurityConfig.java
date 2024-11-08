@@ -37,6 +37,7 @@ public class SecurityConfig {
 			return User.builder()
 				       .username(client.email())
 				       .password(client.password())
+				       .roles(client.role().name())
 				       .build();
 		};
 	}

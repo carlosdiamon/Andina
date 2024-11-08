@@ -2,7 +2,11 @@ package edu.unbosque.adiana.database.client.mapper;
 
 import edu.unbosque.adiana.client.Client;
 import edu.unbosque.adiana.database.client.entity.ClientEntity;
+import edu.unbosque.adiana.database.exceptions.EntityMapperException;
+import edu.unbosque.adiana.database.role.entity.RoleEntity;
+import edu.unbosque.adiana.database.role.repository.RoleRepository;
 import org.jetbrains.annotations.NotNull;
+
 
 public final class ClientMapper {
 
@@ -15,11 +19,22 @@ public final class ClientMapper {
 	 * @param client the domain object to convert
 	 * @return a new ClientEntity object
 	 */
-	public static @NotNull ClientEntity toClientEntity(final @NotNull Client client) {
+	public static @NotNull ClientEntity toClientEntity(
+		final @NotNull Client client,
+		final @NotNull RoleRepository roleRepository
+		) {
+
+		final RoleEntity role = roleRepository.getRoleByName(client.role().name());
+
+		if (role == null) {
+			throw new EntityMapperException("Role not found: " + client.role().name());
+		}
+
 		final ClientEntity entity = new ClientEntity();
 		entity.setUsername(client.username());
 		entity.setEmail(client.email());
 		entity.setPassword(client.password());
+		entity.setRole(role);
 		entity.setCreatedAt(client.createdAt());
 		return entity;
 	}
@@ -35,6 +50,7 @@ public final class ClientMapper {
 			entity.getUsername(),
 			entity.getEmail(),
 			entity.getPassword(),
+			entity.getRole().getClientRole(),
 			entity.getCreatedAt()
 		);
 	}

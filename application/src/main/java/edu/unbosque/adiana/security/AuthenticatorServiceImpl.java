@@ -57,7 +57,7 @@ public class AuthenticatorServiceImpl implements AuthenticatorService {
 
 		// Null is already assigned to it when it is saved in the database, in this context
 		// it is not necessary to know what its identifier is.
-		client = new Client(null, request.username(), request.email(), encoded, Instant.now());
+		client = new Client(null, request.username(), request.email(), encoded, request.role(), Instant.now());
 		clientStorage.saveClient(client);
 
 		final String jwtToken = auth.generateToken(client);
@@ -96,17 +96,13 @@ public class AuthenticatorServiceImpl implements AuthenticatorService {
 			request.username(),
 			request.email(),
 			encoded,
+			request.role(),
 			client.createdAt()
 		);
 
 		clientStorage.updateClient(clientId, updatedClient);
 		final String jwtToken = auth.generateToken(updatedClient);
 		return new ClientToken(jwtToken, request.email());
-	}
-
-	@Override
-	public void recoverPassword(final @NotNull String email) {
-		//TODO: Luego implementar logica que aun falta implementar el e-mail service :V
 	}
 
 	private @NotNull String validatePassword(final String password) {

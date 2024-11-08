@@ -63,7 +63,6 @@ public class JwtTokenServiceImpl
 		final Claims claims = extractClaim(token);
 		final String email = claims.getSubject();
 		final Instant expiration = claims.getExpiration().toInstant();
-
 		return identifier.equals(email) && expiration.isAfter(Instant.now());
 	}
 

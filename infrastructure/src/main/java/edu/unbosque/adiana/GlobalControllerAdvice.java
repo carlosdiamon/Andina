@@ -32,6 +32,7 @@ public class GlobalControllerAdvice {
 
 	@ExceptionHandler(Exception.class)
 	public ResponseEntity<String> handleGenericError(final Exception exception) {
+		exception.printStackTrace();
 		return ResponseEntity.status(INTERNAL_SERVER_ERROR).body(exception.getMessage());
 	}
 

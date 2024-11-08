@@ -15,9 +15,3 @@ dependencies {
 	compileOnly(libs.annotations)
 	compileOnly(libs.slf4j)
 }
-
-java {
-	toolchain {
-		languageVersion.set(JavaLanguageVersion.of(17))
-	}
-}

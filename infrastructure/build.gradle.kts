@@ -27,3 +27,15 @@ dependencies {
 	compileOnly(libs.annotations)
 	compileOnly(libs.slf4j)
 }
+
+java {
+	toolchain {
+		languageVersion.set(JavaLanguageVersion.of(17))
+	}
+}
+
+tasks {
+	withType<JavaCompile> {
+		options.compilerArgs.add("-parameters")
+	}
+}

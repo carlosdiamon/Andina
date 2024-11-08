@@ -26,7 +26,7 @@ public class HibernateConfig {
 
 	@Bean
 	public LocalSessionFactoryBean sessionFactory() {
-		final String[] tables = {"audit", "client", "contract", "data", "investor", "operator", "transaction"};
+		final String[] tables = {"audit", "client", "contract", "role"};
 		final String[] packages = new String[tables.length];
 
 		for (int i = 0; i < tables.length; i++) {

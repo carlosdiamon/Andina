@@ -16,6 +16,4 @@ public interface AuthenticatorService {
 		final @NotNull RegisterRequest request
 	);
 
-	void recoverPassword(final @NotNull String email);
-
 }

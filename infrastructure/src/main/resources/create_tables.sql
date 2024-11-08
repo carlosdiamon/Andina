@@ -3,18 +3,13 @@ CREATE TABLE client (
 											username VARCHAR(100) NOT NULL,
 											email VARCHAR(150) UNIQUE NOT NULL,
 											password VARCHAR(255) NOT NULL,
-											created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+											created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+											role_id INT REFERENCES role(role_id)
 );
 
 CREATE TABLE role (
 										role_id SERIAL PRIMARY KEY,
 										name VARCHAR(50) UNIQUE NOT NULL
-);
-
-CREATE TABLE client_role (
-													 client_id INT REFERENCES client(client_id) ON DELETE CASCADE,
-													 role_id INT REFERENCES role(role_id) ON DELETE CASCADE,
-													 PRIMARY KEY (client_id, role_id)
 );
 
 CREATE TABLE contract (
@@ -31,7 +26,12 @@ CREATE TABLE contract (
 
 CREATE TABLE contract_acceptance (
 																	 contract_acceptance_id SERIAL PRIMARY KEY,
-																	 contract_id INT REFERENCES contractEntity(contract_id) ON DELETE CASCADE,
+																	 contract_id INT REFERENCES contract(contract_id) ON DELETE CASCADE,
 																	 operator_id INT REFERENCES client(client_id) ON DELETE SET NULL,
 																	 created_at TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP -- referencia a cuando la acepto :v
 );
+
+--- inserts
+
+INSERT INTO role (name)
+VALUES ('INVESTOR'), ('OPERATOR');
