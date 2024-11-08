@@ -1,16 +1,14 @@
 package edu.unbosque.adiana.rest.contract;
 
 import edu.unbosque.adiana.contract.Contract;
+import edu.unbosque.adiana.contract.ContractAcceptance;
 import edu.unbosque.adiana.contract.ContractService;
+import edu.unbosque.adiana.contract.request.ContractRequest;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.Collection;
-import java.util.List;
 
 @RestController
 @RequestMapping("/contract")
@@ -18,30 +16,59 @@ public class ContractRestController {
 
 	private final ContractService contractService;
 
-	public ContractRestController(final ContractService contractService) { this.contractService = contractService; }
-
-	@GetMapping("/{id}")
-	public ResponseEntity<Contract> getContractById(final @PathVariable("id") int id) {
-		final Contract contract = contractService.getContract(id);
-		return ResponseEntity.ok(contract);
-	}
-	@GetMapping("/operator/{id}")
-	public Collection<Contract> getContractByOperator(final @PathVariable("id") int id) {
-		return contractService.getContractsByOperator(id);
+	public ContractRestController(final ContractService contractService) {
+		this.contractService = contractService;
 	}
 
-	@GetMapping("/api")
-	public Collection<Contract> getContracts() {
-		return contractService.getContracts();
+	@PostMapping
+	public ResponseEntity<Contract> createContract(@RequestBody ContractRequest contractRequest) {
+		Contract createdContract = contractService.registerContract(contractRequest);
+		return ResponseEntity.status(HttpStatus.CREATED).body(createdContract);
 	}
 
-	@PostMapping("/apply/{investorId}/{contractId}")
-	public ResponseEntity<Contract> applyContract(
-		final @PathVariable("investorId") int investorId,
-		final @PathVariable("contractId") int contractId
+	@GetMapping
+	public ResponseEntity<Collection<Contract>> getAllContracts() {
+		Collection<Contract> contracts = contractService.getContracts();
+		return ResponseEntity.ok(contracts);
+	}
+
+	@GetMapping("/{contractId}")
+	public ResponseEntity<Contract> getContractById(@PathVariable int contractId) {
+		Contract contract = contractService.getContract(contractId);
+		return contract != null ? ResponseEntity.ok(contract) : ResponseEntity.notFound().build();
+	}
+
+	@PutMapping("/{contractId}")
+	public ResponseEntity<ContractRequest> updateContract(
+		@PathVariable int contractId,
+		@RequestBody ContractRequest contractRequest
 	) {
-		final Contract contract = contractService.applyContract(investorId, contractId);
-		return ResponseEntity.ok(contract);
+		contractService.updateContract(contractId, contractRequest);
+		return ResponseEntity.ok(contractRequest); // cambiar, tengo sueño :V
 	}
 
+	@DeleteMapping("/{contractId}")
+	public ResponseEntity<Void> deleteContract(@PathVariable int contractId) {
+		contractService.removeContract(contractId);
+		return ResponseEntity.noContent().build();
+	}
+
+	@GetMapping("/investor/{investorId}")
+	public Collection<Contract> getContractsByInvestor(@PathVariable int investorId) {
+		return contractService.getContractsByInvestor(investorId);
+	}
+
+	@PutMapping("/{contractId}/accept")
+	public ResponseEntity<Void> acceptContract(
+		@PathVariable int contractId,
+		@RequestParam int operatorId
+	) {
+		contractService.contractAccepted(contractId, operatorId);
+		return ResponseEntity.noContent().build();
+	}
+
+	@GetMapping("/acceptances/operator/{operatorId}")
+	public Collection<ContractAcceptance> getAcceptancesByOperator(@PathVariable int operatorId) {
+		return contractService.getContractAcceptancesByOperator(operatorId);
+	}
 }

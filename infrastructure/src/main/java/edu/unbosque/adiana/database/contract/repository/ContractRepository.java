@@ -19,7 +19,7 @@ public interface ContractRepository {
 
 	@Nullable ContractEntity getContract(final int contractId);
 
-	@NotNull Collection<ContractEntity> getContractsByOperator(final int operatorId);
+	@NotNull Collection<ContractEntity> getContractsByInvestor(final int investorId);
 
 	@NotNull Collection<ContractEntity> getContracts();
 

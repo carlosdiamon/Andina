@@ -1,20 +1,37 @@
 package edu.unbosque.adiana.contract;
 
+import edu.unbosque.adiana.contract.request.ContractRequest;
 import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 
 import java.util.Collection;
 
 public interface ContractService {
 
-	@NotNull Contract applyContract(
-		final int investorId,
-		final int contractId
+	@NotNull Contract registerContract(final @NotNull ContractRequest request);
+
+	void updateContract(
+		final int contractId,
+		final @NotNull ContractRequest request
 	);
 
-	@NotNull Contract getContract(final int contractId);
+	void removeContract(final int contractId);
 
-	@NotNull Collection<Contract> getContractsByOperator(final int operatorId);
+	@Nullable Contract getContract(final int contractId);
+
+	@NotNull Collection<Contract> getContractsByInvestor(final int investorId);
 
 	@NotNull Collection<Contract> getContracts();
+
+	void contractAccepted(
+		final int contractId,
+		final int operatorId
+	);
+
+	@Nullable ContractAcceptance getContractAcceptance(final int contractId);
+
+	@NotNull Collection<ContractAcceptance> getContractAcceptancesByOperator(final int operatorId);
+
+	@NotNull Collection<ContractAcceptance> getContractAcceptances();
 
 }

@@ -1,10 +1,13 @@
 package edu.unbosque.adiana.database.client.entity;
 
 import edu.unbosque.adiana.database.PersistenceEntity;
+import edu.unbosque.adiana.database.role.entity.RoleEntity;
 import jakarta.persistence.*;
 import org.hibernate.annotations.ColumnDefault;
 
 import java.time.Instant;
+import java.util.HashSet;
+import java.util.Set;
 
 @Entity
 @Table(name = "client", schema = "public")
@@ -32,6 +35,14 @@ public class ClientEntity implements PersistenceEntity {
 	@ColumnDefault("CURRENT_TIMESTAMP")
 	@Column(name = "created_at")
 	private Instant createdAt;
+
+	@ManyToMany(fetch = FetchType.EAGER)
+	@JoinTable(
+		name = "client_role",
+		joinColumns = @JoinColumn(name = "client_id"),
+		inverseJoinColumns = @JoinColumn(name = "role_id")
+	)
+	private Set<RoleEntity> roles = new HashSet<>();
 
 	public Integer getId() {
 		return id;
@@ -71,6 +82,10 @@ public class ClientEntity implements PersistenceEntity {
 
 	public void setCreatedAt(Instant createdAt) {
 		this.createdAt = createdAt;
+	}
+
+	public Set<RoleEntity> getRoles() {
+		return roles;
 	}
 
 	@Override

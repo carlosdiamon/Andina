@@ -7,7 +7,7 @@ import java.util.Collection;
 
 public interface ContractStorageAdapter {
 
-	void saveContract(final @NotNull Contract contract);
+	@NotNull Contract saveContract(final @NotNull Contract contract);
 
 	void updateContract(
 		final int contractId,
@@ -18,7 +18,7 @@ public interface ContractStorageAdapter {
 
 	@Nullable Contract getContract(final int contractId);
 
-	@NotNull Collection<Contract> getContractByOperator(final int operatorId);
+	@NotNull Collection<Contract> getContractsByInvestor(final int investorId);
 
 	@NotNull Collection<Contract> getContracts();
 

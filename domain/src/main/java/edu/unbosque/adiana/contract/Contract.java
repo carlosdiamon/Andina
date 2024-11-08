@@ -1,42 +1,36 @@
 package edu.unbosque.adiana.contract;
 
-import edu.unbosque.adiana.operator.Operator;
+import edu.unbosque.adiana.contract.status.ContractStatus;
 import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
 
 import java.math.BigDecimal;
 import java.time.Instant;
+import java.time.LocalDate;
 
 public record Contract(
-	@NotNull Integer operatorId,
-	@Nullable Integer investorId,
-	@NotNull String name,
+	Integer id,
+	@NotNull Integer investorId,
+	@NotNull LocalDate date,
+	@NotNull String company,
+	@NotNull BigDecimal stockValue,
+	int quantity,
 	@NotNull ContractStatus status,
-	@NotNull BigDecimal price,
-	int amount,
-	@NotNull Instant creationAt,
-	@Nullable Instant acquisitionAt
+	@NotNull Instant createdAt,
+	@NotNull Instant updatedAt
 ) {
-
-	public static ContractBuilder builder(Contract contract) {
-		return new ContractBuilder(contract);
-	}
-
-	public static ContractBuilder builder(int operatorId) {
-		return new ContractBuilder(operatorId);
-	}
 
 	@Override
 	public String toString() {
 		return "Contract{" +
-		       "operatorId=" + operatorId +
+		       "id=" + id +
 		       ", investorId=" + investorId +
-		       ", name='" + name + '\'' +
+		       ", date=" + date +
+		       ", company='" + company + '\'' +
+		       ", stockValue=" + stockValue +
+		       ", quantity=" + quantity +
 		       ", status=" + status +
-		       ", price=" + price +
-		       ", amount=" + amount +
-		       ", creationAt=" + creationAt +
-		       ", acquisitionAt=" + acquisitionAt +
+		       ", createdAt=" + createdAt +
+		       ", updatedAt=" + updatedAt +
 		       '}';
 	}
 }

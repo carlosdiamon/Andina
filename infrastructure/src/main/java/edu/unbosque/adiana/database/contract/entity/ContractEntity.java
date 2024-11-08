@@ -1,8 +1,8 @@
 package edu.unbosque.adiana.database.contract.entity;
 
+import edu.unbosque.adiana.contract.status.ContractStatus;
 import edu.unbosque.adiana.database.PersistenceEntity;
-import edu.unbosque.adiana.database.investor.entity.InvestorEntity;
-import edu.unbosque.adiana.database.operator.entity.OperatorEntity;
+import edu.unbosque.adiana.database.client.entity.ClientEntity;
 import jakarta.persistence.*;
 import org.hibernate.annotations.ColumnDefault;
 import org.hibernate.annotations.OnDelete;
@@ -10,122 +10,75 @@ import org.hibernate.annotations.OnDeleteAction;
 
 import java.math.BigDecimal;
 import java.time.Instant;
+import java.time.LocalDate;
 
 @Entity
 @Table(name = "contract", schema = "public")
 public class ContractEntity implements PersistenceEntity {
 
-	@Id
-	@GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "contract_id_gen")
+	@Id @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "contract_id_gen")
 	@SequenceGenerator(
 		name = "contract_id_gen",
 		sequenceName = "contract_contract_id_seq",
 		allocationSize = 1
-	)
-	@Column(name = "contract_id", nullable = false)
-	private Integer id;
+	) @Column(name = "contract_id", nullable = false) private Integer id;
 
-	@ManyToOne(fetch = FetchType.LAZY)
-	@OnDelete(action = OnDeleteAction.CASCADE)
-	@JoinColumn(name = "investor_id")
-	private InvestorEntity investor;
+	@ManyToOne(fetch = FetchType.LAZY) @OnDelete(action = OnDeleteAction.SET_NULL)
+	@JoinColumn(name = "investor_id") private ClientEntity investor;
 
-	@ManyToOne(fetch = FetchType.LAZY)
-	@OnDelete(action = OnDeleteAction.CASCADE)
-	@JoinColumn(name = "operator_id")
-	private OperatorEntity operator;
+	@Column(name = "date", nullable = false) private LocalDate date;
 
-	@Column(name = "stock_name", nullable = false, length = 150)
-	private String stockName;
+	@Column(name = "company", nullable = false, length = 100) private String company;
 
-	@Column(name = "quantity", nullable = false)
-	private Integer quantity;
+	@Column(name = "stock_value", precision = 10, scale = 2) private BigDecimal stockValue;
 
-	@Column(name = "price", nullable = false, precision = 10, scale = 2)
-	private BigDecimal price;
+	@Column(name = "quantity", nullable = false) private Integer quantity;
 
-	@ColumnDefault("'active'")
+	@Enumerated(EnumType.STRING)
 	@Column(name = "status", nullable = false, length = 20)
-	private String status;
+	private ContractStatus status;
 
-	@ColumnDefault("CURRENT_TIMESTAMP")
-	@Column(name = "creation_date")
-	private Instant creationDate;
+	@ColumnDefault("CURRENT_TIMESTAMP") @Column(name = "created_at", nullable = false)
+	private Instant createdAt;
 
-	@Column(name = "acquisition_date")
-	private Instant acquisitionDate;
+	@ColumnDefault("CURRENT_TIMESTAMP") @Column(name = "updated_at", nullable = false)
+	private Instant updatedAt;
 
-	public Integer getId() {
-		return id;
-	}
+	public Integer getId() { return id; }
 
-	public void setId(Integer id) {
-		this.id = id;
-	}
+	public void setId(Integer id) { this.id = id; }
 
-	public InvestorEntity getInvestor() {
-		return investor;
-	}
+	public ClientEntity getInvestor() { return investor; }
 
-	public void setInvestor(InvestorEntity investor) {
-		this.investor = investor;
-	}
+	public void setInvestor(ClientEntity investor) { this.investor = investor; }
 
-	public OperatorEntity getOperator() {
-		return operator;
-	}
+	public LocalDate getDate() { return date; }
 
-	public void setOperator(OperatorEntity operator) {
-		this.operator = operator;
-	}
+	public void setDate(LocalDate date) { this.date = date; }
 
-	public String getStockName() {
-		return stockName;
-	}
+	public String getCompany() { return company; }
 
-	public void setStockName(String stockName) {
-		this.stockName = stockName;
-	}
+	public void setCompany(String company) { this.company = company; }
 
-	public Integer getQuantity() {
-		return quantity;
-	}
+	public BigDecimal getStockValue() { return stockValue; }
 
-	public void setQuantity(Integer quantity) {
-		this.quantity = quantity;
-	}
+	public void setStockValue(BigDecimal stockValue) { this.stockValue = stockValue; }
 
-	public BigDecimal getPrice() {
-		return price;
-	}
+	public Integer getQuantity() { return quantity; }
 
-	public void setPrice(BigDecimal price) {
-		this.price = price;
-	}
+	public void setQuantity(Integer quantity) { this.quantity = quantity; }
 
-	public String getStatus() {
-		return status;
-	}
+	public ContractStatus getStatus() { return status; }
 
-	public void setStatus(String status) {
-		this.status = status;
-	}
+	public void setStatus(ContractStatus status) { this.status = status; }
 
-	public Instant getCreationDate() {
-		return creationDate;
-	}
+	public Instant getCreatedAt() { return createdAt; }
 
-	public void setCreationDate(Instant creationDate) {
-		this.creationDate = creationDate;
-	}
+	public void setCreatedAt(Instant createdAt) { this.createdAt = createdAt; }
 
-	public Instant getAcquisitionDate() {
-		return acquisitionDate;
-	}
+	public Instant getUpdatedAt() { return updatedAt; }
 
-	public void setAcquisitionDate(Instant acquisitionDate) {
-		this.acquisitionDate = acquisitionDate;
-	}
+	public void setUpdatedAt(Instant updatedAt) { this.updatedAt = updatedAt; }
 
 	@Override
 	public int getIdentifier() {

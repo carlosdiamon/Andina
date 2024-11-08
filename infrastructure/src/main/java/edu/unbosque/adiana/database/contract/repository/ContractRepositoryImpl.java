@@ -1,6 +1,6 @@
 package edu.unbosque.adiana.database.contract.repository;
 
-import edu.unbosque.adiana.contract.exceptions.ContractNotFound;
+import edu.unbosque.adiana.contract.exceptions.ContractNotFoundException;
 import edu.unbosque.adiana.database.contract.entity.ContractEntity;
 import org.hibernate.SessionFactory;
 import org.jetbrains.annotations.NotNull;
@@ -16,9 +16,7 @@ public class ContractRepositoryImpl implements ContractRepository {
 
 	private final SessionFactory sessionFactory;
 
-	public ContractRepositoryImpl(final SessionFactory sessionFactory) {
-		this.sessionFactory = sessionFactory;
-	}
+	public ContractRepositoryImpl(final SessionFactory sessionFactory) { this.sessionFactory = sessionFactory; }
 
 	@Override
 	public void saveContract(final @NotNull ContractEntity contract) {
@@ -26,28 +24,25 @@ public class ContractRepositoryImpl implements ContractRepository {
 	}
 
 	@Override
-	public void updateContract(final int contractId, final @NotNull ContractEntity updatedContract) {
-		ContractEntity contractEntity = getContract(contractId);
-
-		if (contractEntity == null) {
-			throw new ContractNotFound("Contract not found: " + contractId);
+	public void updateContract(
+		final int contractId,
+		final @NotNull ContractEntity updatedContract
+	) {
+		final ContractEntity reference = getContract(contractId);
+		if (reference == null) {
+			throw new ContractNotFoundException("The contract was not found to be able to update, the id is: " + contractId);
 		}
-		contractEntity.setCreationDate(updatedContract.getCreationDate());
-		contractEntity.setPrice(updatedContract.getPrice());
-		contractEntity.setAcquisitionDate(updatedContract.getAcquisitionDate());
-		contractEntity.setInvestor(updatedContract.getInvestor());
-		contractEntity.setStatus(updatedContract.getStatus());
-		contractEntity.setQuantity(updatedContract.getQuantity());
 
-		sessionFactory.getCurrentSession().merge(contractEntity);
+		sessionFactory.getCurrentSession().merge(reference);
 	}
 
 	@Override
 	public void deleteContract(final int contractId) {
-		final ContractEntity entity = getContract(contractId);
-		if (entity != null) {
-			sessionFactory.getCurrentSession().remove(entity);
+		final ContractEntity reference = getContract(contractId);
+		if (reference == null) {
+			throw new ContractNotFoundException("The contract was not found to be able to delete, the id is: " + contractId);
 		}
+		sessionFactory.getCurrentSession().remove(reference);
 	}
 
 	@Override
@@ -56,17 +51,16 @@ public class ContractRepositoryImpl implements ContractRepository {
 	}
 
 	@Override
-	public @NotNull Collection<ContractEntity> getContractsByOperator(final int operatorId) {
+	public @NotNull Collection<ContractEntity> getContractsByInvestor(final int investorId) {
 		return sessionFactory.getCurrentSession()
-				.createQuery("FROM ContractEntity WHERE operator.id = :operatorId", ContractEntity.class)
-				.setParameter("operatorId", operatorId)
-				.list();
+			       .createQuery("FROM ContractEntity WHERE investor.id = :investorId", ContractEntity.class)
+			       .setParameter("investorId", investorId)
+			       .getResultList();
 	}
-
 
 	@Override
 	public @NotNull Collection<ContractEntity> getContracts() {
 		return sessionFactory.getCurrentSession().createQuery("FROM ContractEntity", ContractEntity.class)
-				.getResultList();
+			       .getResultList();
 	}
 }

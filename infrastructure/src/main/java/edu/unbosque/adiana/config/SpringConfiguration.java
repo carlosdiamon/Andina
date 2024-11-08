@@ -2,7 +2,6 @@ package edu.unbosque.adiana.config;
 
 import edu.unbosque.adiana.client.ClientStorageAdapter;
 import edu.unbosque.adiana.contract.ContractService;
-import edu.unbosque.adiana.contract.ContractServiceImpl;
 import edu.unbosque.adiana.contract.ContractStorageAdapter;
 import edu.unbosque.adiana.investor.InvestorService;
 import edu.unbosque.adiana.investor.InvestorServiceImpl;
