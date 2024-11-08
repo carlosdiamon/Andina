@@ -43,7 +43,7 @@ public class AuthenticatorServiceImpl implements AuthenticatorService {
 	public @NotNull ClientToken registerClient(final @NotNull RegisterRequest request) {
 		final Pattern emailPattern = Pattern.compile(environment.getProperty(EMAIL_REGEX, DEFAULT_EMAIL_REGEX));
 
-		if (emailPattern.matcher(request.email()).matches()) {
+		if (!emailPattern.matcher(request.email()).matches()) {
 			throw new EmailAuthException("The email provided does not use a valid format.", request.email());
 		}
 

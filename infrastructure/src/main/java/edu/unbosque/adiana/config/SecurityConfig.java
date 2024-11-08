@@ -2,16 +2,12 @@ package edu.unbosque.adiana.config;
 
 import edu.unbosque.adiana.client.Client;
 import edu.unbosque.adiana.client.ClientStorageAdapter;
-import edu.unbosque.adiana.security.JwtAuthenticationFilter;
-import jakarta.servlet.Filter;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.AuthenticationProvider;
 import org.springframework.security.authentication.dao.DaoAuthenticationProvider;
 import org.springframework.security.config.annotation.authentication.configuration.AuthenticationConfiguration;
-import org.springframework.security.config.annotation.web.builders.HttpSecurity;
-import org.springframework.security.config.annotation.web.configurers.AbstractHttpConfigurer;
 import org.springframework.security.core.userdetails.User;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
@@ -39,7 +35,7 @@ public class SecurityConfig {
 			}
 
 			return User.builder()
-				       .username(client.username())
+				       .username(client.email())
 				       .password(client.password())
 				       .build();
 		};

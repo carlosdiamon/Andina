@@ -1,7 +1,5 @@
 package edu.unbosque.adiana.security;
 
-import edu.unbosque.adiana.client.Client;
-import edu.unbosque.adiana.client.ClientStorageAdapter;
 import edu.unbosque.adiana.security.jwt.JwtTokenService;
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
@@ -29,16 +27,13 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
 
 	private final JwtTokenService jwtService;
 	private final UserDetailsService userDetailsService;
-	private final ClientStorageAdapter clientStorageAdapter;
 
 	public JwtAuthenticationFilter(
 		final JwtTokenService jwtService,
-		final UserDetailsService userDetailsService,
-		final ClientStorageAdapter clientStorageAdapter
+		final UserDetailsService userDetailsService
 	) {
 		this.jwtService = jwtService;
 		this.userDetailsService = userDetailsService;
-		this.clientStorageAdapter = clientStorageAdapter;
 	}
 
 	@Override
@@ -61,8 +56,7 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
 
 		final String email = jwtService.extractIdentifier(token);
 		final Authentication auth = SecurityContextHolder.getContext().getAuthentication();
-
-		if (!StringUtils.hasText(email) || auth == null) {
+		if (!StringUtils.hasText(email) || auth != null) {
 			filterChain.doFilter(request, response);
 			return;
 		}
@@ -70,14 +64,13 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
 		// Username is email
 		final UserDetails user = userDetailsService.loadUserByUsername(email); // Added in authService
 
-		if (user == null) { // What?
+		if (user == null) {
 			filterChain.doFilter(request, response);
 			return;
 		}
 
-		final Client client = clientStorageAdapter.getClientByEmail(user.getUsername());
-
-		if (client != null && jwtService.isValidToken(token, client)) {
+		// Identifier = email
+		if (jwtService.isValidToken(token, user.getUsername())) {
 			final UsernamePasswordAuthenticationToken authentication = new UsernamePasswordAuthenticationToken(
 				user,
 				null,

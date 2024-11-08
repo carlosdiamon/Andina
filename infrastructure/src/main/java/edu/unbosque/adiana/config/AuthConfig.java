@@ -17,7 +17,10 @@ public class AuthConfig {
 	private final JwtAuthenticationFilter filter;
 	private final AuthenticationProvider provider;
 
-	public AuthConfig(final JwtAuthenticationFilter filter, final AuthenticationProvider provider) {
+	public AuthConfig(
+		final JwtAuthenticationFilter filter,
+		final AuthenticationProvider provider
+	) {
 		this.filter = filter;
 		this.provider = provider;
 	}

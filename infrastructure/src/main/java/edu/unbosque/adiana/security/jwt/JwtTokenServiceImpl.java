@@ -7,7 +7,6 @@ import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.io.Decoders;
 import io.jsonwebtoken.security.Keys;
 import org.jetbrains.annotations.NotNull;
-import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Service;
 
 import javax.crypto.SecretKey;
@@ -59,13 +58,13 @@ public class JwtTokenServiceImpl
 	@Override
 	public boolean isValidToken(
 		final @NotNull String token,
-		final @NotNull Client client
+		final @NotNull String identifier
 	) {
 		final Claims claims = extractClaim(token);
 		final String email = claims.getSubject();
 		final Instant expiration = claims.getExpiration().toInstant();
 
-		return client.username().equals(email) && expiration.isAfter(Instant.now());
+		return identifier.equals(email) && expiration.isAfter(Instant.now());
 	}
 
 	private @NotNull String buildToken(
@@ -85,9 +84,10 @@ public class JwtTokenServiceImpl
 
 	private @NotNull Claims extractClaim(final @NotNull String token) {
 		return Jwts.parser()
-			       .decryptWith(key)
+			       .verifyWith(key)
 			       .build()
 			       .parseSignedClaims(token)
 			       .getPayload();
 	}
+
 }

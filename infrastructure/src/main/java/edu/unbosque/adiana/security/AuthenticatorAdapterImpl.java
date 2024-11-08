@@ -41,6 +41,6 @@ public class AuthenticatorAdapterImpl implements AuthenticatorAdapter {
 		final @NotNull String identifier,
 		final @NotNull String password
 	) {
-		manager.authenticate(new UsernamePasswordAuthenticationToken(identifier, encryptPassword(password)));
+		manager.authenticate(new UsernamePasswordAuthenticationToken(identifier, password));
 	}
 }

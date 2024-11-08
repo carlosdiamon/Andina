@@ -26,7 +26,7 @@ public interface JwtTokenService {
 
 	boolean isValidToken(
 		final @NotNull String token,
-		final @NotNull Client details
+		final @NotNull String identifier
 	);
 
 }
