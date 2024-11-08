@@ -29,7 +29,7 @@ public class AuthConfig {
 	public SecurityFilterChain securityFilterChain(final HttpSecurity http) throws Exception {
 		http.csrf(AbstractHttpConfigurer::disable)
 			.authorizeHttpRequests(req ->
-				                       req.requestMatchers("/auth/**")
+				                       req.requestMatchers("/auth/**", "/stock/**")
 					                       .permitAll()
 					                       .anyRequest()
 					                       .authenticated()

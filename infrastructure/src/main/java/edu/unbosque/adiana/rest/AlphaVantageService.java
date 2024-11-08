@@ -23,8 +23,33 @@ public class AlphaVantageService {
 	public AlphaVantageService(final DotenvWrapper env) { this.env = env; }
 
 	public StockMarket getStockData(String symbol) throws Exception {
-		return new StockMarket("test");
+		String apiKey = env.getString("API_TOKEN");
+		String urlStr = String.format(KEY, symbol, apiKey);
+
+		URL url = new URL(urlStr);
+		HttpURLConnection connection = (HttpURLConnection) url.openConnection();
+		connection.setRequestMethod("GET");
+
+		int responseCode = connection.getResponseCode();
+		if (responseCode != HttpURLConnection.HTTP_OK) {
+			throw new RuntimeException("Failed : HTTP error code : " + responseCode);
+		}
+
+		BufferedReader in = new BufferedReader(new InputStreamReader(connection.getInputStream()));
+		StringBuilder response = new StringBuilder();
+		String inputLine;
+
+		while ((inputLine = in.readLine()) != null) {
+			response.append(inputLine);
+		}
+		in.close();
+
+		connection.disconnect();
+
+		// Parse and return the stock data
+		return parseStockData(symbol, response.toString());
 	}
+
 
 	private StockMarket parseStockData(String symbol, String jsonResponse) {
 		StockMarket stockMarket = new StockMarket(symbol);
