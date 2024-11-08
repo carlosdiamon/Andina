@@ -1,0 +1,49 @@
+[versions]
+
+spring = "3.3.3"
+
+spring-orm = "6.1.14"
+
+tomcat = "11.0.0"
+
+hibernate = "6.6.1.Final"
+
+postgresql = "42.7.4"
+
+jjwt = "0.12.6"
+
+annotations = "24.0.0"
+
+slf4j = "2.0.16"
+
+# plugins
+
+springboot = "3.2.5"
+
+[libraries]
+
+hibernate = { group = "org.hibernate.orm", name = "hibernate-core", version.ref = "hibernate" }
+
+spring-web = { group = "org.springframework.boot", name = "spring-boot-starter-web", version.ref = "spring" }
+
+spring-orm = { group = "org.springframework", name = "spring-orm", version.ref = "spring-orm" }
+
+spring-security = { group = "org.springframework.boot", name = "spring-boot-starter-security", version.ref = "spring" }
+
+tomcat = { group = "org.apache.tomcat", name = "tomcat-dbcp", version.ref = "tomcat" }
+
+postgresql = { group = "org.postgresql", name = "postgresql", version.ref = "postgresql" }
+
+jjwt-api = { group = "io.jsonwebtoken", name = "jjwt-api", version.ref = "jjwt" }
+
+jjwt-impl = { group = "io.jsonwebtoken", name = "jjwt-impl", version.ref = "jjwt" }
+
+jjwt-jackson = { group = "io.jsonwebtoken", name = "jjwt-jackson", version.ref = "jjwt" }
+
+annotations = { group = "org.jetbrains", name = "annotations", version.ref = "annotations" }
+
+slf4j = { group = "org.slf4j", name = "slf4j-api", version.ref = "slf4j"}
+
+[plugins]
+
+springboot = { id = "org.springframework.boot", version.ref = "springboot"}
